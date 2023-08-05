@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { FormComponent } from "../components/form/FormComponent";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../helper/axiosHelper";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [userObj, setUserObj] = useState({});
   const input = [
     {
       label: "Email",
@@ -21,6 +25,19 @@ const Login = () => {
       placeholder: "Password",
     },
   ];
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setUserObj({ ...userObj, [name]: value });
+  };
+  console.log(userObj);
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const { status, message } = await loginUser(userObj);
+    console.log(status, message);
+    toast[status](message);
+    status === "success" && navigate("/dashboard");
+  };
+
   return (
     <div className="body">
       <Container className="main">
@@ -34,9 +51,9 @@ const Login = () => {
             </div>
           </Col>
           <Col className="shadow-lg p-5 rounded">
-            <Form>
+            <Form onSubmit={handleOnSubmit}>
               {input.map((item, i) => (
-                <FormComponent key={i} {...item} />
+                <FormComponent key={i} {...item} onChange={handleOnChange} />
               ))}
               <Button variant="primary" type="submit">
                 Submit

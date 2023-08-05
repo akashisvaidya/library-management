@@ -4,8 +4,9 @@ import cors from "cors";
 import UserRouter from "./src/router/UserRouter.js";
 import { connectDb } from "./src/db_config/DB_Config.js";
 import helmet from "helmet";
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
+// import dotenv from "dotenv";
+// dotenv.config();
 
 const app = express();
 

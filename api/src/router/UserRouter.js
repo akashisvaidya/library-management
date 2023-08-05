@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser } from "../model/user/userModel.js";
+import { createUser, getUser } from "../model/user/userModel.js";
 
 const router = express.Router();
 
@@ -27,11 +27,18 @@ router.post("/login", async (req, res, next) => {
   try {
     console.log(req.body);
     const user = await getUser(req.body);
-    res.json({
-      status: "success",
-      message: "Login successfully.",
-      user,
-    });
+    if (user?._id) {
+      res.json({
+        status: "success",
+        message: "Login successfully.",
+        user,
+      });
+    } else {
+      res.json({
+        status: "error",
+        message: "Login credentials do not match.",
+      });
+    }
   } catch (error) {
     next(error);
   }
